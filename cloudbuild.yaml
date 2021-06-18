@@ -1,0 +1,57 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - '--no-cache'
+      - '-t'
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+      - .
+      - '-f'
+      - Dockerfile
+    id: Build
+    timeout: 1800s
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+    id: Push
+    timeout: 1800s
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    args:
+      - run
+      - deploy
+      - $_SERVICE_NAME
+      - '--platform=managed'
+      - '--image=$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID,$_LABELS
+      - '--region=$_DEPLOY_REGION'
+      - '--memory=512Mi'
+      - '--concurrency=1'
+      - '--cpu=1'
+      - '--max-instances=1'
+      - '--set-env-vars=PCA_API_BASE_URL=https://paper-api.alpaca.markets '
+      - '--service-account=pubsubsa@iwasnothing-self-learning.iam.gserviceaccount.com'
+      - '--no-allow-unauthenticated'
+      - '--region=us-central1'
+      - '--timeout=5m'
+      - '--quiet'
+    id: Deploy
+    timeout: 1800s
+    entrypoint: gcloud
+images:
+  - '$_GCR_HOSTNAME/$PROJECT_ID/$_SERVICE_NAME:$COMMIT_SHA'
+options:
+  substitutionOption: ALLOW_LOOSE
+substitutions:
+  _TRIGGER_ID: 19fb227a-30d1-402e-96af-da3bfa1ee215
+  _PLATFORM: managed
+  _SERVICE_NAME: helloworld
+  _DEPLOY_REGION: us-central1
+  _GCR_HOSTNAME: gcr.io
+  _LABELS: gcb-trigger-id=19fb227a-30d1-402e-96af-da3bfa1ee215
+timeout: 1800s
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - helloworld
