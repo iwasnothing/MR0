@@ -41,11 +41,15 @@ class TradeBot:
 
         lasttrade = api.get_last_trade(self.ticker2)
         currentprice[1] = lasttrade.price
-        
-        current_diff = (currentprice[0] - df.iloc[-1]['Close_'+self.ticker1])/df.iloc[-1]['Close_'+self.ticker1] - 
-                        (currentprice[1] - df.iloc[-1]['Close_'+self.ticker2])/df.iloc[-1]['Close_'+self.ticker2]
-
-       
+        lastp1 = df.iloc[-1]['Close_'+self.ticker1]
+        lastp2 = df.iloc[-1]['Close_'+self.ticker2]
+        print(currentprice)
+        print(lastp1,lastp2)
+        return1 = (currentprice[0] - lastp1)/lastp1
+        return2 = (currentprice[1] - lastp2)/lastp2
+        print(return1,return2)
+        current_diff = return1 - return2
+        print(current_diff)
         sig = statistics.stdev(df['Diff'])
         if current_diff >= sig:
             return (-1,1)
