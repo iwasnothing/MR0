@@ -44,12 +44,12 @@ images:
 options:
   substitutionOption: ALLOW_LOOSE
 substitutions:
-  _TRIGGER_ID: 19fb227a-30d1-402e-96af-da3bfa1ee215
+  _TRIGGER_ID: 6056834a-bb80-436e-a73a-aadaa6d71184
   _PLATFORM: managed
   _SERVICE_NAME: mr0
   _DEPLOY_REGION: us-central1
   _GCR_HOSTNAME: gcr.io
-  _LABELS: gcb-trigger-id=19fb227a-30d1-402e-96af-da3bfa1ee215
+  _LABELS: gcb-trigger-id=6056834a-bb80-436e-a73a-aadaa6d71184
 timeout: 1800s
 tags:
   - gcp-cloud-build-deploy-cloud-run
