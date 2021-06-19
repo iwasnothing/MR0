@@ -25,20 +25,27 @@ class TradeBot:
         self.lookback = lookback
         self.API_KEY = API_KEY
         self.API_SECRET = API_SECRET
+        self.APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
+        self.api = tradeapi.REST(self.API_KEY, self.API_SECRET, self.APCA_API_BASE_URL, 'v2')
 
     def trading_signal(self):
         hist1 = self.load_data(self.ticker1, self.lookback)
         hist2 = self.load_data(self.ticker2, self.lookback)
         hist1['PctChg'] = hist1['Close'].pct_change()
-        hist1['PctChg'] = hist2['Close'].pct_change()
+        hist2['PctChg'] = hist2['Close'].pct_change()
+        print(hist1)
+        print(hist2)
         df = hist1.merge(hist2,on='Time',suffixes=['_'+self.ticker1, '_'+self.ticker2]).dropna()
-        df['Diff'] = df[['PctChg_'+ticker1,'PctChg_'+ticker2]].apply(lambda x: x['PctChg_'+ticker1]-x['PctChg_'+ticker2], axis=1)
+        print(df)
+        cols = ['PctChg_'+self.ticker1,'PctChg_'+self.ticker2]
+        print(cols)
+        df['Diff'] = df[cols].apply(lambda x: x[cols[0]]-x[cols[1]], axis=1)
         
         currentprice = [0,0]
-        lasttrade = api.get_last_trade(self.ticker1)
+        lasttrade = self.api.get_last_trade(self.ticker1)
         currentprice[0] = lasttrade.price
 
-        lasttrade = api.get_last_trade(self.ticker2)
+        lasttrade = self.api.get_last_trade(self.ticker2)
         currentprice[1] = lasttrade.price
         lastp1 = df.iloc[-1]['Close_'+self.ticker1]
         lastp2 = df.iloc[-1]['Close_'+self.ticker2]
@@ -59,10 +66,9 @@ class TradeBot:
         return (0,0)
 
     def load_data(self,ticker,period):
-        APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
-        api = tradeapi.REST(self.API_KEY, self.API_SECRET, APCA_API_BASE_URL, 'v2')
+        
 
-        barset = api.get_barset(ticker, "day", limit=period)
+        barset = self.api.get_barset(ticker, "day", limit=period)
         bars = barset[ticker]
         df = pd.DataFrame( [ (b.c,b.t) for b in bars], columns=['Close', 'Time'] )
         return df
