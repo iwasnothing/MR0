@@ -29,8 +29,8 @@ class TradeBot:
     def trading_signal(self):
         hist1 = self.load_data(self.ticker1, self.lookback)
         hist2 = self.load_data(self.ticker2, self.lookback)
-        hist1['PctChg'] = hist1.pct_change()
-        hist1['PctChg'] = hist2.pct_change()
+        hist1['PctChg'] = hist1['Close'].pct_change()
+        hist1['PctChg'] = hist2['Close'].pct_change()
         df = hist1.merge(hist2,on='time',suffixes=['_'+self.ticker1, '_'+self.ticker2]).dropna()
         df['Diff'] = df[['PctChg_'+ticker1,'PctChg_'+ticker2]].apply(lambda x: x['PctChg_'+ticker1]-x['PctChg_'+ticker2], axis=1)
         
