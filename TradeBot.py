@@ -20,7 +20,6 @@ class TradeBot:
         else:
             # Handle target environment that doesn't support HTTPS verification
             ssl._create_default_https_context = _create_unverified_https_context
-        self.past = past
         self.ticker1 = ticker1
         self.ticker2 = ticker2
         self.lookback = lookback
