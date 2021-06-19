@@ -78,7 +78,11 @@ class TradeBot:
         api = tradeapi.REST(self.API_KEY, self.API_SECRET, APCA_API_BASE_URL, 'v2')
         last_quote = api.get_last_quote(symbol)
         symbol_price = last_quote.askprice
-        
+        print(symbol_price)
+        if symbol_price == 0:
+            lasttrade = self.api.get_last_trade(symbol)
+            symbol_price = lasttrade.price
+        print(symbol_price)
         toBuy = True
         portfolio = api.list_positions()
 
@@ -89,6 +93,7 @@ class TradeBot:
                 print("current position is {}".format(position.qty))
         if toBuy == True:
             spread = 0.3
+            print(symbol_price * (1 - spread),symbol_price * (1 - spread) * 0.95,symbol_price * (1 + spread))
             api.submit_order(
                 symbol=symbol,
                 qty=lot,
