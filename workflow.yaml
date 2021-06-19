@@ -1,20 +1,11 @@
-- newPredictor:
-    call: http.get
-    args:
-        url: https://helloworld-s3yk5iivva-uc.a.run.app/newspredict
-        auth:
-            type: OIDC
-- maPredictor:
-    call: http.get
-    args:
-        url: https://helloworld-s3yk5iivva-uc.a.run.app/mapredict
-        auth:
-            type: OIDC  
-- BQuery:
+- DayTrade:
     call: http.post
     args:
-        url: https://helloworld-s3yk5iivva-uc.a.run.app/buuperday
+        url: https://helloworld-s3yk5iivva-uc.a.run.app/dayend
         body:
-            query: SELECT * FROM `iwasnothing-self-learning.stock_cor.ma_predict_short_list` 
+            ticker1: GLD
+            ticker2: IAU
+            lot1: 1
+            lot2: 5
         auth:
             type: OIDC  

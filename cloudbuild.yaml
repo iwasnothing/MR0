@@ -46,7 +46,7 @@ options:
 substitutions:
   _TRIGGER_ID: 19fb227a-30d1-402e-96af-da3bfa1ee215
   _PLATFORM: managed
-  _SERVICE_NAME: helloworld
+  _SERVICE_NAME: mr0
   _DEPLOY_REGION: us-central1
   _GCR_HOSTNAME: gcr.io
   _LABELS: gcb-trigger-id=19fb227a-30d1-402e-96af-da3bfa1ee215
@@ -54,4 +54,4 @@ timeout: 1800s
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
-  - helloworld
+  - mr0
