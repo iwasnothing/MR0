@@ -53,6 +53,7 @@ def daytrade():
     lots = (lot1,lot2)
     bot = TradeBot(symbols[0],symbols[1],lookback,API_KEY,API_SECRET)
     signals = bot.trading_signal()
+    print(signals)
     for i in range(2):
         print(symbols[i])
         if signals[i] == 1:
