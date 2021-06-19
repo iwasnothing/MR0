@@ -8,7 +8,6 @@ from flask import Flask
 from flask import request
 from zipfile import ZipFile
 from TradeBot import TradeBot
-from StockCorrelation import StockCorrelation
 from os.path import basename
 from datetime import date
 import json
