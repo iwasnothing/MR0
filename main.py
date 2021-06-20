@@ -45,9 +45,10 @@ def daytrade():
         ticker2 = content['ticker2']
         lot1 = int(content['lot1'])
         lot2 = int(content['lot2'])
+        lookback = int(content['lookback'])
         print(ticker1,ticker2,lot1,lot2)
     (API_KEY,API_SECRET) = init_vars()
-    lookback = 15
+    #lookback = 21
     symbols = (ticker1,ticker2)
     lots = (lot1,lot2)
     bot = TradeBot(symbols[0],symbols[1],lookback,API_KEY,API_SECRET)

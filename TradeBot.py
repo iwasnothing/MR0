@@ -28,6 +28,13 @@ class TradeBot:
         self.APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
         self.api = tradeapi.REST(self.API_KEY, self.API_SECRET, self.APCA_API_BASE_URL, 'v2')
 
+    def momentum(self,df):
+        n = len(df)
+        ma_short = df.iloc[int(n/2):n].values
+        ma_long = df.iloc[1:n].values
+        return sum(ma_short/len(ma_short)) - sum(ma_long/len(ma_long))
+
+
     def trading_signal(self):
         hist1 = self.load_data(self.ticker1, self.lookback)
         hist2 = self.load_data(self.ticker2, self.lookback)
@@ -37,10 +44,14 @@ class TradeBot:
         print(hist2)
         df = hist1.merge(hist2,on='Time',suffixes=['_'+self.ticker1, '_'+self.ticker2]).dropna()
         print(df)
+
         cols = ['PctChg_'+self.ticker1,'PctChg_'+self.ticker2]
         print(cols)
         df['Diff'] = df[cols].apply(lambda x: x[cols[0]]-x[cols[1]], axis=1)
-        
+
+        mm1 = self.momentum(df[cols[0]])
+        mm2 = self.momentum(df[cols[1]])
+        print(mm1,mm2)
         currentprice = [0,0]
         lasttrade = self.api.get_last_trade(self.ticker1)
         currentprice[0] = lasttrade.price
@@ -57,13 +68,20 @@ class TradeBot:
         current_diff = return1 - return2
         print(current_diff)
         sig = statistics.stdev(df['Diff'])
+        trade1 = 0
+        trade2 = 0
         if current_diff >= sig:
-            return (-1,1)
+            if mm1 <= 0:
+                trade1 = -1
+            if mm2 >= 0:
+                trade2 = 1
         elif current_diff <= -1*sig:
-            return (1,-1)
-        else:
-            return (0,0)
-        return (0,0)
+            if mm1 >= 0:
+                trade1 = 1
+            if mm2 <= 0:
+                trade2 = -1
+        print(trade1,trade2)
+        return (trade1,trade2)
 
     def load_data(self,ticker,period):
         
