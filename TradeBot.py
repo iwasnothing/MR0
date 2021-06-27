@@ -10,7 +10,7 @@ import joblib
 import statistics
 
 class TradeBot:
-    def __init__(self,ticker1='ZM',ticker2='LBTYK',lookback=15,API_KEY=None,API_SECRET=None):
+    def __init__(self,ticker1='ZM',ticker2='LBTYK',lookback=21,beta=1,res=0,API_KEY=None,API_SECRET=None):
         requests.packages.urllib3.disable_warnings()
         try:
             _create_unverified_https_context = ssl._create_unverified_context
@@ -23,6 +23,8 @@ class TradeBot:
         self.ticker1 = ticker1
         self.ticker2 = ticker2
         self.lookback = lookback
+        self.beta = beta
+        self.res = res
         self.API_KEY = API_KEY
         self.API_SECRET = API_SECRET
         self.APCA_API_BASE_URL = "https://paper-api.alpaca.markets"
@@ -47,7 +49,7 @@ class TradeBot:
 
         cols = ['PctChg_'+self.ticker1,'PctChg_'+self.ticker2]
         print(cols)
-        df['Diff'] = df[cols].apply(lambda x: x[cols[0]]-x[cols[1]], axis=1)
+        df['Diff'] = df[cols].apply(lambda x: x[cols[0]] - self.beta * x[cols[1]], axis=1)
 
         mm1 = self.momentum(df[cols[0]])
         mm2 = self.momentum(df[cols[1]])
@@ -65,17 +67,17 @@ class TradeBot:
         return1 = (currentprice[0] - lastp1)/lastp1
         return2 = (currentprice[1] - lastp2)/lastp2
         print(return1,return2)
-        current_diff = return1 - return2
+        current_diff = return1 - self.beta * return2
         print(current_diff)
         sig = statistics.stdev(df['Diff'])
         trade1 = 0
         trade2 = 0
-        if current_diff >= sig:
+        if current_diff >= self.res + sig:
             if mm1 <= 0:
                 trade1 = -1
             if mm2 >= 0:
                 trade2 = 1
-        elif current_diff <= -1*sig:
+        elif current_diff <= self.res - sig:
             if mm1 >= 0:
                 trade1 = 1
             if mm2 <= 0:
