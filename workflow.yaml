@@ -7,5 +7,7 @@
             ticker2: IAU
             lot1: 1
             lot2: 5
+            beta: 1
+            res: 0
         auth:
             type: OIDC  
