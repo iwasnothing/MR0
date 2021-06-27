@@ -46,12 +46,14 @@ def daytrade():
         lot1 = int(content['lot1'])
         lot2 = int(content['lot2'])
         lookback = int(content['lookback'])
+        beta = float(content['beta'])
+        res = float(content['res'])
         print(ticker1,ticker2,lot1,lot2)
     (API_KEY,API_SECRET) = init_vars()
     #lookback = 21
     symbols = (ticker1,ticker2)
     lots = (lot1,lot2)
-    bot = TradeBot(symbols[0],symbols[1],lookback,API_KEY,API_SECRET)
+    bot = TradeBot(symbols[0],symbols[1],lookback,beta,res,API_KEY,API_SECRET)
     signals = bot.trading_signal()
     print(signals)
     for i in range(2):
