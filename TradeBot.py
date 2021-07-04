@@ -73,14 +73,12 @@ class TradeBot:
         trade1 = 0
         trade2 = 0
         if current_diff >= self.res + sig:
-            if mm1 <= 0:
+            if mm1 <= 0 or mm2 >= 0:
                 trade1 = -1
-            if mm2 >= 0:
                 trade2 = 1
         elif current_diff <= self.res - sig:
-            if mm1 >= 0:
+            if mm1 >= 0 or mm2 <= 0:
                 trade1 = 1
-            if mm2 <= 0:
                 trade2 = -1
         print(trade1,trade2)
         return (trade1,trade2)
