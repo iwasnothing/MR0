@@ -46,7 +46,8 @@ class TradeBot:
         print(hist2)
         df = hist1.merge(hist2,on='Time',suffixes=['_'+self.ticker1, '_'+self.ticker2]).dropna()
         print(df)
-
+        if len(hist1) < 2 or len(hist2) < 2 or len(df) < 2:
+            return (0,0)
         cols = ['PctChg_'+self.ticker1,'PctChg_'+self.ticker2]
         print(cols)
         df['Diff'] = df[cols].apply(lambda x: x[cols[0]] - self.beta * x[cols[1]], axis=1)
