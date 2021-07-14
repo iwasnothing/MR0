@@ -136,7 +136,7 @@ class TradeBot:
 
         # Print the quantity of shares for each position.
         for position in portfolio:
-            if position.symbol == symbol and position.qty > 0:
+            if position.symbol == symbol and int(position.qty) > 0:
                 toSell = True
                 print("current position is {}".format(position.qty))
         if toSell == True:
