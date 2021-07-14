@@ -136,15 +136,17 @@ class TradeBot:
 
         # Print the quantity of shares for each position.
         for position in portfolio:
-            if position.symbol == symbol and int(position.qty) > 0:
+            current_lot = int(position.qty)
+            if position.symbol == symbol and  current_lot > 0 and current_lot >= lot:
                 toSell = True
                 print("current position is {}".format(position.qty))
-        if toSell == True:
-            api.submit_order(
-                symbol=symbol,
-                qty=lot,
-                side='sell',
-                type='market',
-                time_in_force='gtc'
-            )
+                print("current position is {}".format(current_lot))
+                print("selling position is {}".format(lot))
+                api.submit_order(
+                    symbol=symbol,
+                    qty=lot,
+                    side='sell',
+                    type='market',
+                    time_in_force='gtc'
+                )
 
